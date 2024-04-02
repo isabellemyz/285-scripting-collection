@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ATLA: Four Elements</title>
+
+        <style>
+            body {
+				font-family: Arial, sans-serif;
+                display: flex;
+				flex-direction: column;
+			}
+
+			div {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+                text-align: center;
+			}
+
+            .container {
+                display: flex;
+            }
+
+            .column {
+                flex: 0.5;
+                flex-direction: column;
+            }
+
+            .icon-button {
+                background-color: #fff;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                border: 1px solid black;
+                font-size: 18px;
+                width: 150px;
+            }
+       
+            .icon {
+                margin-right: 5px;
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+            }
+
+            .comp-button {
+                pointer-events: none;
+            }
+
+            #settings {
+                flex-direction: column;
+            }
+
+            #reset-button {
+                background-color: #fff;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                border: 1px solid black;
+                font-size: 18px;
+                width: 200px;
+            }
+
+            #rounds {
+                border: 1px solid black;
+                width: 100px;
+                height: 30px;
+                
+            }
+        </style>
+    </head>
+
+    <body>
+        <div><h1>THE FOUR ELEMENTS</h1></div>
+        <div>
+            <h3>
+                This game is from the fictional world of the TV show <i>Avatar: The Last Airbender</i> and resembles rock-paper-scissors
+                <br>
+                The element hierarchy is based on the Avatar Cycle: water > earth > fire > air > water... and so on
+                <br>
+                Play by picking one of the four elements: water, earth, fire, or air. Reset the game whenever you like!
+            </h3>
+        </div>
+
+        <div style="margin-bottom: 25px" id="numRounds"></div>
+        <div style="margin-bottom: 25px;" id="result"></div>
+
+        <div class="container">
+            <div class="column">
+                <div id="player-score">SCORE: 0</div>
+                <p>Pick your element:</p>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button player-choice" onclick="handlePlayerChoice(this)">
+                        <img src="images/atla-water.png" alt="Icon" class="icon"> water
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button player-choice" onclick="handlePlayerChoice(this)">
+                        <img src="images/atla-earth.png" alt="Icon" class="icon"> earth
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button player-choice" onclick="handlePlayerChoice(this)">
+                        <img src="images/atla-fire.png" alt="Icon" class="icon"> fire
+                    </button>
+                </div>
+
+                <div>
+                    <button class="icon-button player-choice" onclick="handlePlayerChoice(this)">
+                        <img src="images/atla-air.png" alt="Icon" class="icon"> air
+                    </button>
+                </div>
+            </div>
+
+            <div class="column">
+                <div id="computer-score">SCORE: 0</div>
+                <p>Opponent's choice:</p>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button comp-button">
+                        <img src="images/atla-water.png" alt="Icon" class="icon"> water
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button comp-button">
+                        <img src="images/atla-earth.png" alt="Icon" class="icon"> earth
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 10px;">
+                    <button class="icon-button comp-button">
+                        <img src="images/atla-fire.png" alt="Icon" class="icon"> fire
+                    </button>
+                </div>
+
+                <div>
+                    <button class="icon-button comp-button">
+                        <img src="images/atla-air.png" alt="Icon" class="icon"> air
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="settings">
+            <div style="margin-top: 60px;">
+                <div id="roundsResult" style="color: red"></div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <form id="roundsForm">
+                    <label for="rounds" style="margin-right: 5px">BEST OUT OF:</label>
+                    <input type="input" id="rounds" style="margin-right: 20px" placeholder="# OF ROUNDS">
+                </form> 
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button id="reset-button" onclick="handleReset()">
+                    RESET GAME
+                </button>
+            </div>
+
+            
+        </div>
+
+        <script>
+            let computerChoiceTimeout;
+            let cleanUpTimeout;
+
+            let roundsCount = 0;
+            let gameStarted = false;
+
+            document.getElementById("roundsForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                console.log("enter hit")
+
+                let rounds = document.getElementById("rounds").value.trim();
+
+                if (rounds == '') {
+                    alert("Please enter a value");
+                    return;
+                }
+
+                rounds = parseInt(rounds);
+                if (isNaN(rounds) || rounds <= 0) {
+                    alert("Please enter a positive number greater than 0");
+                    return;
+                }
+
+                console.log(rounds)
+
+                handleReset(); // clean up the game
+
+                roundsCount = rounds; // set new number of rounds
+                gameStarted = true; // start game
+                document.getElementById("numRounds").textContent = "ROUNDS: " + roundsCount
+            })
+
+            function handleReset() {
+                console.log("handle reset called")
+                // cancel if a free game is ongoing
+                clearTimeout(computerChoiceTimeout)
+                clearTimeout(cleanUpTimeout)
+                
+                roundsCount = 0; // reset rounds to 0 if needed
+                gameStarted = false;
+
+                // clean up scores for both sides
+                document.getElementById("player-score").innerText = "SCORE: 0";
+                document.getElementById("player-score").style.color = "black";
+                document.getElementById("computer-score").innerText = "SCORE: 0";
+                document.getElementById("computer-score").style.color = "black";
+
+                // clean up result and buttons
+                document.getElementById("result").textContent = "";
+                document.getElementById("roundsResult").textContent = "";
+                document.getElementById("numRounds").textContent = "";
+                document.getElementById("rounds").value = '';
+                resetButtons();
+            }
+
+            async function handlePlayerChoice(clickedChoice) {
+                // disable other player choices
+                document.querySelectorAll(".player-choice").forEach(function(choice) {
+                    if (choice !== clickedChoice) {
+                        choice.disabled = true;
+                    }
+                })
+
+                clickedChoice.style.backgroundColor = "#dbbba4"; // mark clicked button
+                let playerChoice = clickedChoice.textContent.trim() // get player's choice from clicked button
+                document.getElementById("result").textContent = "OPPONENT PICKING...";
+
+                await new Promise(resolve => setTimeout(resolve, 1300))
+
+                // used to have timeout here
+                let computerChoice = handleComputerChoice()
+
+                document.querySelectorAll(".comp-button").forEach(function(button) {
+                    if (button.textContent.trim() == computerChoice) {
+                        button.style.backgroundColor = "#dbbba4";  
+                    }
+                })
+
+                let result = winner(playerChoice, computerChoice);
+                document.getElementById("result").textContent = result;
+
+                if (result == "YOU WIN") {
+                    let currPlayerScore = parseInt((document.getElementById("player-score").textContent).match(/\d+/)[0]) // get current score (string -> number)
+                    let newPlayerScore = currPlayerScore + 1 // increase current score to get new score (number)
+                    document.getElementById("player-score").textContent = "SCORE: " + newPlayerScore // update HTML with new score (number -> string)
+                    document.getElementById("player-score").style.color = "red";
+
+                } else if (result == "YOU LOSE") {
+                    let currCompScore = parseInt((document.getElementById("computer-score").textContent).match(/\d+/)[0])
+                    let newCompScore = currCompScore + 1
+                    document.getElementById("computer-score").textContent = "SCORE: " + newCompScore
+                    document.getElementById("computer-score").style.color = "red";
+                }  
+
+                await new Promise(resolve => setTimeout(resolve, 1500))
+                
+                // used to have timeout here 
+                resetButtons();
+                document.getElementById("player-score").style.color = "black";
+                document.getElementById("computer-score").style.color = "black";
+                document.getElementById("result").textContent = "";
+                    
+                if (roundsCount > 0 && gameStarted) {
+                    roundsCount = roundsCount - 1;
+                    document.getElementById("numRounds").textContent = "ROUNDS: " + roundsCount;
+                    console.log("decremented to:", roundsCount);
+                }  
+                
+                if (roundsCount == 0 && gameStarted) {
+                    console.log("final round in here");
+                    
+                    let finalPlayerScore = parseInt((document.getElementById("player-score").textContent).match(/\d+/)[0])
+                    let finalCompScore = parseInt((document.getElementById("computer-score").textContent).match(/\d+/)[0])
+                    
+                   
+                    if (finalPlayerScore > finalCompScore) {
+                        document.getElementById("roundsResult").textContent = "YOU WIN :)"
+                    } else if (finalPlayerScore < finalCompScore) {
+                        document.getElementById("roundsResult").textContent = "YOU LOSE :("
+                    } else {
+                        document.getElementById("roundsResult").textContent = "DRAW :|"
+                    }
+                    
+                    setTimeout(function() {
+                        handleReset();
+                    }, 2000)
+                } 
+            }
+
+            function handleComputerChoice() {
+                let choices = ["air", "water", "earth", "fire"];
+                let rand = Math.floor(Math.random() * choices.length);
+                return choices[rand]
+            }
+
+            function winner(player, comp) {
+                if ((player == comp) ||
+                    (player == "air" && comp == "earth") ||
+                    (player == "fire" && comp == "water") ||
+                    (player == "earth" && comp == "air") ||
+                    (player == "water" && comp == "fire")) {
+                    return "DRAW"
+                } else if ((player == "water" && comp == "earth") ||
+                            (player == "earth" && comp == "fire") ||
+                            (player == "fire" && comp == "air") ||
+                            (player == "air" && comp == "water")) {
+                    return "YOU WIN"
+                } else {
+                    return "YOU LOSE"
+                }
+            }
+
+            function resetButtons() {
+                document.querySelectorAll(".player-choice").forEach(function(choice) {
+                    choice.disabled = false;
+                    choice.style.backgroundColor = "#fff";
+                });
+
+                document.querySelectorAll(".comp-button").forEach(function(choice) {
+                    choice.style.backgroundColor = "#fff";
+                });
+            }
+        </script>
+    </body>
+</html>

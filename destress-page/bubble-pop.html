@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Destress Page</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+			}
+
+			div {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+		.grid-container {
+			display: grid;
+			grid-template-columns: repeat(4, 50px);
+			grid-gap: 5px 5px;
+		}
+
+		.square {
+			width: 50px;
+			height: 50px;
+			background-color: #000;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div><h1>BUBBLE POPPER</h1></div>
+		<div><p>Click the squares to pop them :)</p></div>
+
+		<br>
+
+		<div class="grid-container">
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		<div class="square"></div>
+		</div>
+
+		<br>
+
+		<div>
+			<input id="newcolor" type="text" placeholder="Enter color">
+			<button id="newcolorbutton">Change color</button>
+		</div>
+
+		<br>
+
+		<div>
+			<button id="reset">Reset bubbles</button>
+		</div>
+
+		<script>
+			document.getElementById("newcolorbutton").onclick = function() {
+				if (document.getElementById("newcolor").value != "") {
+					let color = document.getElementById("newcolor").value;
+				let squares = document.querySelectorAll(".square");
+
+				squares.forEach(function(square) {
+						if (square.innerText == "") {
+							square.style.backgroundColor = color;
+						}
+				});
+				}
+			};
+
+			document.querySelectorAll(".square").forEach(function(square) {
+				square.addEventListener("click", function() {
+					square.style.backgroundColor = "white";
+					square.innerText = "pop";
+				});
+			});
+
+			document.getElementById("reset").onclick = function() {
+				let squares = document.querySelectorAll(".square");
+
+				squares.forEach(function(square) {
+					square.style.backgroundColor = "black";
+					square.innerText = "";
+				});
+			};
+		</script>
+	</body>
+</html>
