@@ -11,3 +11,6 @@ This page features a "bubble popper" - the user can click on a square to "pop" i
 
 ### question formatter
 This page is specifically for Professor Loui's assignments for CSDS 285. It allows me to copy-paste his questions from Canvas and format them to my liking.
+
+### poetry analyzer (IN PROGRESS)
+Code for a command line tool that will analyze poetry stored in a text file. Depending on what options you give it, you can see the most common word(s) of a poem, least common word(s), number of lines, number of stanzas, and word diversity.
