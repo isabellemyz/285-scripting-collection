@@ -2,13 +2,17 @@
 
 # check args provided
 # if none provided, send error message
-if [ "$#" -lt 1 ]; then
-    echo "Choose from these commands:
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "
+    Choose from these commands:
         mcword - most frequent word
         lcword - least frequent word
         nlines - total number of lines
         nstanzas - total number of stanzas
-        wdiversity - word diversity"
+        wdiversity - word diversity
+
+    Format: ./pocket-poet.sh [command] [file]
+    "
     exit 1
 fi
 
@@ -62,4 +66,49 @@ case "$command" in
             print "the least common word is: " lcword
         }' "$@"
         ;;
+    "nlines")
+        awk '{
+            if ($0 !~ /^[[:space:]]*$/) {
+                tot_lines++
+            }
+        }       
+        END {
+            print "the total number of lines is: " tot_lines
+        }' "$@"
+        ;;
+    
+    "nstanzas")
+        awk 'BEGIN {
+                tot_stanzas=0
+                in_stanza=0
+            }
+
+            {
+                if ($0 !~ /^[[:space:]]*$/) { IF THE LINE HAS WORDS
+                    if (!in_stanza) { 
+                        tot_stanzas++
+                        in_stanza = 1
+                    }
+                } else {
+                    if (in_stanza) {
+                        in_stanza = 0
+                    }
+                }
+            }
+
+            END {
+                print "the total number of stanzas is: " tot_stanzas
+            }' "$@"
+        ;;
+    *)
+        echo "
+        Choose from these commands:
+            mcword - most frequent word
+            lcword - least frequent word
+            nlines - total number of lines
+            nstanzas - total number of stanzas
+            wdiversity - word diversity
+        Format: ./pocket-poet.sh [command] [file]
+        "
+        exit 1
 esac
