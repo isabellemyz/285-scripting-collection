@@ -24,8 +24,10 @@ shift # process input
 case "$command" in
     "mcword")
         awk '{
+            gsub(/[^[:alnum:]'\'' ]/, "", $0)
             for (i=1; i<=NF; i++) {
-                words[$i]++
+                word = tolower($i)
+                words[word]++
             }
 
         }
@@ -50,7 +52,7 @@ case "$command" in
             if (num_mcwords == 1) {
                 print "the most common word is: " mcword
             } else {
-                printf "the least common words are: "
+                printf "the most common words are: "
                 first = 1
                 for (mcword in mcwords) {
                     if (!first) {
@@ -67,8 +69,10 @@ case "$command" in
         ;;
     "lcword")
         awk '{
+            gsub(/[^[:alnum:]'\'' ]/, "", $0)
             for (i=1; i<=NF; i++) {
-                words[$i]++
+                word = tolower($i)
+                words[word]++
             }
 
         }
@@ -127,7 +131,7 @@ case "$command" in
             }
 
             {
-                if ($0 !~ /^[[:space:]]*$/) { IF THE LINE HAS WORDS
+                if ($0 !~ /^[[:space:]]*$/) {
                     if (!in_stanza) { 
                         tot_stanzas++
                         in_stanza = 1
