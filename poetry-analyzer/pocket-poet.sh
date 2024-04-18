@@ -27,6 +27,8 @@ if [ "$command" == "help" ]; then
     lcword - will return the least common word in all lower-case. will return multiple words if they are equally common.
     nlines - counts ALL lines with words, including ones for title and author if they are in the text file.
     nstanzas - counts ALL groupings, which are consecutive lines with words. will include lines for title and author if they are in text file.
+    wdiversity - calculates word diversity, which is the number of unique (non-case sensitive) words divided by the total number of words.
+                    higher score means more diverse, lower score means less diverse
     "
 
 else
@@ -40,7 +42,6 @@ else
                     word = tolower($i)
                     words[word]++
                 }
-
             }
             END {
                 max_count=0
@@ -158,6 +159,27 @@ else
                     print "the total number of stanzas is: " tot_stanzas
                 }' "$@"
             ;;
+        "wdiversity")
+            awk '{
+                gsub(/[^[:alnum:]'\'' ]/, "", $0)
+                if ($0 !~ /^[[:space:]]*$/) {
+                    num_total += NF
+                    for (i=1; i<=NF; i++) {
+                        word = tolower($i)
+                        words[word]++
+                    }
+                }   
+            }
+
+            END {
+                num_unique=0
+                for (word in words) {
+                    num_unique++
+                }
+
+                print "the word diversity is: " (num_unique / num_total)
+            }' "$@"
+            ;;
         *)
             echo "
             Choose from these commands:
@@ -170,5 +192,6 @@ else
             For more notes on each command, enter the following: ./pocket-poet.sh help
             "
             exit 1
+            ;;
     esac
 fi
