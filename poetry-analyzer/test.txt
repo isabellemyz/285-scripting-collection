@@ -1,14 +1,2 @@
-Hello world world
-hello Hello
-
-Hello
-           test line
-
-
-
-world world
-hello hello
-
-
-test test test
-
+A A A B B B
+C C C C C       C

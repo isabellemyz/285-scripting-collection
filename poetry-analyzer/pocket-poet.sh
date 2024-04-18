@@ -22,8 +22,6 @@ shift # process input
 
 # define scripts based on command
 case "$command" in
-    # need to fix: case sensitivity, what to return when words occur at same frequency
-    # need to test: punctuation
     "mcword")
         awk '{
             for (i=1; i<=NF; i++) {
@@ -32,17 +30,39 @@ case "$command" in
 
         }
         END {
-            max_count = 0
-            mcword = ""
+            max_count=0
+            num_mcwords=0
 
             for (word in words) {
                 if (words[word] > max_count) {
                     max_count = words[word]
-                    mcword = word
+                    delete mcwords
+                    mcwords[word]
+                } else if (words[word] == max_count) {
+                    mcwords[word]
                 }
             }
 
-            print "the most common word is: " mcword
+            for (mcword in mcwords) {
+                num_mcwords++
+            }
+
+            if (num_mcwords == 1) {
+                print "the most common word is: " mcword
+            } else {
+                printf "the least common words are: "
+                first = 1
+                for (mcword in mcwords) {
+                    if (!first) {
+                        printf ", "
+                    }
+                    printf "%s", mcword
+                    first = 0
+                }
+                printf "\n"
+            }
+
+            print "the frequency is: " max_count
         }' "$@"
         ;;
     "lcword")
@@ -54,16 +74,39 @@ case "$command" in
         }
         END {
             min_count = 99999999
-            lcword = ""
+            num_lcwords = 0
 
             for (word in words) {
                 if (words[word] < min_count) {
                     min_count = words[word]
-                    lcword = word
+                    delete lcwords
+                    lcwords[word]
+                } else if (words[word] == min_count) {
+                    lcwords[word]
                 }
             }
 
-            print "the least common word is: " lcword
+            for (lcword in lcwords) {
+                num_lcwords++
+            }
+
+            if (num_lcwords == 1) {
+                print "the least common word is: " lcword
+            } else {
+                printf "the least common words are: "
+                first = 1
+                for (lcword in lcwords) {
+                    if (!first) {
+                        printf ", "
+                    }
+                    printf "%s", lcword
+                    first = 0
+                }
+                printf "\n"
+            }
+
+            print "the frequency is: " min_count
+
         }' "$@"
         ;;
     "nlines")
