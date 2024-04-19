@@ -28,7 +28,7 @@
 		foreach ($lines as $line) {
 			$line = ucfirst($line);
 			$line = "<strong>$line</strong>";
-			$line .= "<br>";
+			$line .= "<br><br>";
 
 			echo $line;
 
