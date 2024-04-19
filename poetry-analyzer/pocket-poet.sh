@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # check args provided
-# if none provided, send error message
+# if invalid configuration provided, send error message
 if { [ "$#" -lt 1 ] && [ "$#" != "help" ]; } || [ "$#" -gt 2 ]; then
     echo "
     Choose from these commands:
@@ -17,10 +17,8 @@ if { [ "$#" -lt 1 ] && [ "$#" != "help" ]; } || [ "$#" -gt 2 ]; then
     exit 1
 fi
 
-# extract command
-command="$1"
-filename="$2"
-# shift # process input
+command="$1" # extract command
+filename="$2" # extract filename
 
 if [ "$command" == "help" ]; then
     echo "
@@ -160,24 +158,24 @@ else
             awk 'BEGIN {
                     tot_stanzas=0
                     in_stanza=0
-                }
+            }
 
-                {
-                    if ($0 !~ /^[[:space:]]*$/) {
-                        if (!in_stanza) { 
-                            tot_stanzas++
-                            in_stanza = 1
-                        }
-                    } else {
-                        if (in_stanza) {
-                            in_stanza = 0
-                        }
+            {
+                if ($0 !~ /^[[:space:]]*$/) {
+                    if (!in_stanza) { 
+                        tot_stanzas++
+                        in_stanza = 1
+                    }
+                } else {
+                    if (in_stanza) {
+                        in_stanza = 0
                     }
                 }
+            }
 
-                END {
-                    print "the total number of stanzas is: " tot_stanzas
-                }' "$filename"
+            END {
+                print "the total number of stanzas is: " tot_stanzas
+            }' "$filename"
             ;;
         "wdiversity")
             awk '{
