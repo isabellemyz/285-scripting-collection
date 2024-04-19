@@ -19,8 +19,8 @@ At this point, you could play the game an endless amount of times.
 
 ### DRAFT 4
 - Added more small things for user experience like:
--   Briefly changing the score to red when it's updated
--   Making notifications like "you win" or "you lose" red
--   Displaying number of rounds left (if the user entered any to begin with)
+  - Briefly changing the score to red when it's updated
+  - Making notifications like "you win" or "you lose" red
+  - Displaying number of rounds left (if the user entered any to begin with)
 
 Now, you have the final working product!!
