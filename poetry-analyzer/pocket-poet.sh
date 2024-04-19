@@ -29,7 +29,7 @@ if [ "$command" == "help" ]; then
     nlines - counts ALL lines with words, including ones for title and author if they are in the text file.
     nstanzas - counts ALL groupings, which are consecutive lines with words. will include lines for title and author if they are in text file.
     wdiversity - calculates word diversity, which is the number of unique (non-case sensitive) words divided by the total number of words.
-                    higher score means more diverse, lower score means less diverse
+                    generally, higher score means more diverse, lower score means less diverse
     "
 
 else
