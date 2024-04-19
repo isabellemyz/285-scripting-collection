@@ -35,7 +35,11 @@
     
     // array_combine($keys, $values)
     $unown_mapping = array_combine($characters, array_map(function ($char) {
-        return "unown-$char.png";
+        if ($char == '?') {
+            return "unown-ques.png";
+        } else {
+            return "unown-$char.png";
+        }
     }, $characters));
 
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
