@@ -53,6 +53,8 @@
                 echo "<img src='images/" . $unown_mapping[$char] . "' alt='$char' width='50' height='50'>";
             } elseif ($char == ' ') {
                 echo "<span style='width: 40px; display: inline-block;'>&nbsp;</span>"; // making spaces bigger
+            } elseif ($char == "\n") {
+                echo "<br><br>"; // implement newlines
             } else {
                 echo $char;
             }
