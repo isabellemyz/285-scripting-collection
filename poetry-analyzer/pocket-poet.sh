@@ -19,7 +19,8 @@ fi
 
 # extract command
 command="$1"
-shift # process input
+filename="$2"
+# shift # process input
 
 if [ "$command" == "help" ]; then
     echo "
@@ -32,18 +33,36 @@ if [ "$command" == "help" ]; then
     "
 
 else
+    cword() {
+        local type="$command"
+        local file="$filename"
 
-    # define scripts based on command
-    case "$command" in
-        "mcword")
-            awk '{
-                gsub(/[^[:alnum:]'\'' ]/, "", $0)
-                for (i=1; i<=NF; i++) {
-                    word = tolower($i)
+        awk -v type="$type" -v filler_words="the,a,an,and,or,but,in,on,at,of,for,with,to,by,as,is,are,was,were,be" 'BEGIN {
+            split(filler_words, filler_array, ",")
+        }
+
+        {
+            gsub(/[^[:alnum:]'\'' ]/, "", $0)
+
+            for (i=1; i<=NF; i++) {
+                word = tolower($i)
+                is_filler = 0
+
+                for (filler_word in filler_array) {
+                    if (filler_array[filler_word] == word) {
+                        is_filler = 1
+                        break
+                    }
+                }
+
+                if (!is_filler) {
                     words[word]++
                 }
             }
-            END {
+        }
+
+        END {
+            if (type == "mcword") {
                 max_count=0
                 num_mcwords=0
 
@@ -77,18 +96,8 @@ else
                 }
 
                 print "the frequency is: " max_count
-            }' "$@"
-            ;;
-        "lcword")
-            awk '{
-                gsub(/[^[:alnum:]'\'' ]/, "", $0)
-                for (i=1; i<=NF; i++) {
-                    word = tolower($i)
-                    words[word]++
-                }
 
-            }
-            END {
+            } else if (type == "lcword") {
                 min_count = 99999999
                 num_lcwords = 0
 
@@ -123,7 +132,18 @@ else
 
                 print "the frequency is: " min_count
 
-            }' "$@"
+            }
+
+        }' "$filename"
+    }
+
+    # define scripts based on command
+    case "$command" in
+        "mcword")
+            cword
+            ;;
+        "lcword")
+            cword
             ;;
         "nlines")
             awk '{
@@ -133,7 +153,7 @@ else
             }       
             END {
                 print "the total number of lines is: " tot_lines
-            }' "$@"
+            }' "$filename"
             ;;
         
         "nstanzas")
@@ -157,7 +177,7 @@ else
 
                 END {
                     print "the total number of stanzas is: " tot_stanzas
-                }' "$@"
+                }' "$filename"
             ;;
         "wdiversity")
             awk '{
@@ -178,7 +198,7 @@ else
                 }
 
                 print "the word diversity is: " (num_unique / num_total)
-            }' "$@"
+            }' "$filename"
             ;;
         *)
             echo "
