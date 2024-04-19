@@ -2,8 +2,19 @@
 	<title>Pokemon Translator</title>
 	<style>
 		body {
-			font-family: Arial, sans-serif;
-		}
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        p {
+            margin: 1px 0;
+        }
+
+        #translation {
+            flex-direction: row;
+        }
 	</style>
 </head>
 
@@ -37,7 +48,7 @@
             if (isset($unown_mapping[$char])) {
                 echo "<img src='images/" . $unown_mapping[$char] . "' alt='$char' width='50' height='50'>";
             } elseif ($char == ' ') {
-                echo "<span style='width: 40px; display: inline-block;'>&nbsp;</span>";
+                echo "<span style='width: 40px; display: inline-block;'>&nbsp;</span>"; // making spaces bigger
             } else {
                 echo $char;
             }
