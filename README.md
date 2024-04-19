@@ -9,8 +9,11 @@ The user can choose to play indefinitely or set a certain number of rounds in wh
 ### de-stress page
 This page features a "bubble popper" - the user can click on a square to "pop" it and also change the color or reset the grid.
 
+### poetry analyzer
+Code for a command line tool that will analyze poetry stored in a text file. Depending on what options you give it, you can see the most common word(s) of a poem, least common word(s), number of lines, number of stanzas, and word diversity.
+
+### pokemon translator
+This page lets you translate any sort of text into the Unown "language." Unown is a kind of Pokemon that takes on different forms which resemble the letters of the English alphabet and the punctuation '!' and '?'
+
 ### question formatter
 This page is specifically for Professor Loui's assignments for CSDS 285. It allows me to copy-paste his questions from Canvas and format them to my liking.
-
-### poetry analyzer (IN PROGRESS)
-Code for a command line tool that will analyze poetry stored in a text file. Depending on what options you give it, you can see the most common word(s) of a poem, least common word(s), number of lines, number of stanzas, and word diversity.
