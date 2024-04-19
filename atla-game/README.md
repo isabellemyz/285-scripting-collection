@@ -1,4 +1,4 @@
-## ATLA GAME LOG
+## ATLA GAME PROGRESS LOG
 
 I completed this project before I made this repo, so version history is not accurate to how I worked on it. I have roughly documented my process below.
 
