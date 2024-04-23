@@ -20,7 +20,7 @@ fi
 command="$1" # extract command
 filename="$2" # extract filename
 
-if [ "$command" == "help" ]; then
+if [ "$command" = "help" ]; then
     echo "
     mcword - will return the most common word in all lower-case. will return multiple words if they are equally common.
     lcword - will return the least common word in all lower-case. will return multiple words if they are equally common.
